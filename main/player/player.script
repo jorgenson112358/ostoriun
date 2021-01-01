@@ -1,0 +1,112 @@
+FollowerCount = 0
+BlessingsPower = 5
+CurrentGodPower = 0
+PowerNeededForFullGodhood = 1000
+Blessings = {  }
+PlayerLocation = vmath.vector3(700, 200, 1)
+PlayerHealth = 100
+
+-- pre-hashing ids improves performance
+local msg_contact_point_response = hash("contact_point_response")
+local msg_animation_done = hash("animation_done")
+local group_obstacle = hash("obstacle")
+local input_up = hash("move-up")
+local input_down = hash("move-down")
+local input_left = hash("move-left")
+local input_right = hash("move-right")
+local input_jump = hash("jump")
+local input_touch = hash("touch")
+local anim_run = hash("run")
+local anim_idle = hash("idle")
+local anim_jump = hash("jump")
+local anim_fall = hash("fall")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	self.moving = false
+	self.attacking = false
+
+	self.input = vmath.vector3()
+	self.dir = vmath.vector3(0, 1, 0)
+	self.speed = 100
+	self.animation = nil
+	self.hflip = false
+
+	go.set_position(PlayerLocation)
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function update(self, dt)
+	if PlayerHealth <= 0 then
+		--game over, you lose
+	else
+		sprite.set_hflip("#sprite", self.hflip)
+
+		local anim = hash("idle")
+		if self.moving then
+			local pos = go.get_position()
+			pos = pos + self.dir * self.speed * dt
+			go.set_position(pos)
+			--anim = hash("run")
+		end
+
+		if self.attacking == false then
+			self.npc_already_hit_this_round = false
+
+			if self.animation ~= anim then
+				self.animation = anim
+				--msg.post("#sprite", "play_animation", { id = anim})
+			end
+		end
+
+		self.input.x = 0
+		self.input.y = 0
+		self.moving = false
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if self.attacking == true then
+		self.input.y = 0
+		self.input.x = 0
+		self.moving = false
+	else
+		if action_id == input_up then
+			self.input.y = 1
+		elseif action_id == input_down then
+			self.input.y = -1
+		elseif action_id == input_left then
+			self.input.x = -1
+			self.hflip = false
+		elseif action_id == input_right then
+			self.input.x = 1
+			self.hflip = true
+		--elseif action_id == hash("attack") and action.pressed then
+		elseif action_id == hash("showstats") then
+		-- 	print(string.format("Vikings %d", MaxVikingCount))
+		-- 	print(string.format("Chief %d", MaxVikingBossCount))
+		-- 	print(string.format("Removed %d", RemovedVikings))
+		end
+	end
+
+	if vmath.length(self.input) > 0 then
+		self.moving = true
+		self.dir = vmath.normalize(self.input)
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

@@ -1,5 +1,5 @@
 [project]
-title = ostoriun2
+title = ostoriun
 
 [bootstrap]
 main_collection = /main/main.collectionc
