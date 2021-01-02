@@ -1,0 +1,54 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.playerUrl = "/player#player"
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("left-click") and action.pressed then
+		local btnLeft = gui.get_node("btnLeft")
+		local btnRight = gui.get_node("btnRight")
+		local btnUp = gui.get_node("btnUp")
+		local btnDown = gui.get_node("btnDown")
+		local btnStop = gui.get_node("btnStop")
+		local levitating = false
+		local dir = nil
+		
+		if gui.pick_node(btnLeft, action.x, action.y) then
+			levitating = true
+			dir = vmath.vector3(-1, 0, 0)
+		elseif gui.pick_node(btnRight, action.x, action.y) then
+			levitating = true
+			dir = vmath.vector3(1, 0, 0)
+		elseif gui.pick_node(btnUp, action.x, action.y) then
+			levitating = true
+			dir = vmath.vector3(0, 1, 0)
+		elseif gui.pick_node(btnDown, action.x, action.y) then
+			levitating = true
+			dir = vmath.vector3(0, -1, 0)
+		elseif gui.pick_node(btnStop, action.x, action.y) then
+			msg.post("/instance0", "levitate-stop")
+		end
+
+		if levitating == true then
+			print(PlayerUrl)
+			local temp = msg.url(PlayerUrl)
+			msg.post("/instance0", "levitate-object", { dir = dir } )
+		end
+	end
+end

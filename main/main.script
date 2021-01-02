@@ -1,3 +1,5 @@
+PlayerUrl = nil
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
@@ -10,9 +12,11 @@ function on_message(self, message_id, message, sender)
 	-- print(sender)
 	if message_id == hash("load-player") then
 		component = nil
+		guiComponent = nil
 
 		if message.playerName == "Ostoriun" then
 			component = "/playerCreator#ostoriunFactory"
+			guiComponent = "/playerCreator#ostoriunGuiFactory"
 		elseif message.playerName == "Riokol" then
 			component = "/playerCreator#riokolFactory"
 		else
@@ -21,8 +25,14 @@ function on_message(self, message_id, message, sender)
 
 		if component ~= nil then
 			scaling = vmath.vector3(0.33, 0.33, 1.0)
-			print("creating " .. component)
-			factory.create(component, nil, nil, nil, scaling)
+			--print("creating " .. component)
+			local id = factory.create(component, nil, nil, nil, scaling)
+			PlayerUrl = id
+			print("id " .. id)
+			print("PlayerUrl " .. PlayerUrl)
+		end
+		if guiComponent ~= nil then
+			factory.create(guiComponent)
 		end
 	end
 end

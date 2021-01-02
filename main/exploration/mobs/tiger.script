@@ -1,0 +1,33 @@
+function init(self)
+	self.dir = vmath.vector3(0, 0, 0)
+	self.moving = false
+	self.speed = 20
+end
+
+function update(self, dt)
+	if vmath.length(self.dir) > 0 then
+		self.moving = true
+		self.dir = vmath.normalize(self.dir)
+	end
+	
+	if self.moving then
+		local pos = go.get_position()
+		pos = pos + self.dir * self.speed * dt
+		go.set_position(pos)
+		--anim = hash("levitating")
+	end
+	
+end
+
+function on_message(self, message_id, message, sender)
+	-- print("tiger received")
+	-- print(message_id)
+	-- print(message)
+	-- print(sender)
+	-- 
+	if message_id == hash("update-dir") then
+		self.dir = self.dir + message.dir
+	elseif message_id == hash("levitate-stop") then
+		self.dir = vmath.vector3(0, 0, 0)
+	end
+end

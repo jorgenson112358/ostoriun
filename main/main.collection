@@ -1,4 +1,44 @@
 name: "main"
+instances {
+  id: "tiger"
+  prototype: "/main/exploration/mobs/tiger.go"
+  position {
+    x: 780.0
+    y: 220.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "tree1"
+  prototype: "/main/exploration/mobs/tree1.go"
+  position {
+    x: 800.0
+    y: 100.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "map"
@@ -59,6 +99,24 @@ embedded_instances {
   "  id: \"riokolFactory\"\n"
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/main/player/riokol/player.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"ostoriunGuiFactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/main/player/ostoriun/ost-gui.go\\\"\\n"
   "load_dynamically: false\\n"
   "\"\n"
   "  position {\n"
