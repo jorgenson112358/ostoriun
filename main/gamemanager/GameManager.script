@@ -1,0 +1,52 @@
+function init(self)
+	
+	self.playerName = nil
+	msg.post("/proxyManager#newGameProxy", "load")
+end
+
+function final(self)
+	
+end
+
+function update(self, dt)
+	-- if (self.totalExpectedVikings == RemovedVikings or TownHealth <= 0) and self.gameOver == false then
+	-- 	self.gameOver = true
+	-- 	sound.stop("/bkgmusic#sound")
+	-- 	if PlayerHealth > 0 and TownHealth > 0 then
+	-- 		msg.post("#mainproxy", "unload")
+	-- 		msg.post("#victoryproxy", "load")
+	-- 	else
+	-- 		msg.post("#mainproxy", "unload")
+	-- 		msg.post("#defeatproxy", "load")
+	-- 	end
+	-- end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("load_game") then
+		--sound.stop("/bkgmusic#sound")
+		--print("init game with " .. message.playerName)
+		self.playerName = message.playerName
+		msg.post("/proxyManager#mainProxy", "load")
+		msg.post("/proxyManager#newGameProxy", "unload")
+	elseif message_id == hash("proxy_loaded") then
+		--print("proxy loaded " .. sender)
+		msg.post(sender, "init")
+		msg.post(sender, "enable")
+
+		local mainUrl = msg.url("GameManager:/proxyManager#mainProxy")
+		local newGameUrl = msg.url("GameManager:/proxyManager#newGameProxy")
+		if sender == mainUrl then
+			--print("loading player with " .. self.playerName)
+			msg.post("main:/gameRunner#main", "load-player", { playerName = self.playerName })
+		elseif sender == newGameUrl then
+			msg.post(sender, "acquire_input_focus")
+			
+		end
+	elseif message_id == hash("proxy_unloaded") then
+		--msg.post(sender, message_id)
+	-- elseif message_id == hash("game-over-defeat") then
+	-- 	msg.post("#mainProxy", "unload")
+	-- 	msg.post("#defeatproxy", "load")
+	end
+end

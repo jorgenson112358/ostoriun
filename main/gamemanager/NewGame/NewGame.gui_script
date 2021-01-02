@@ -1,0 +1,33 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	self.textOstoriun = "Once, you were Ostoriun the Brawler, the god who held shut the gates of the Underworld as your fellow deities sealed them.\n\nBut in the millennia of peace that followed the demons being locked away, need for your rough and ready fists has fallen so far you are nearly depleted of power.\n\nYou haven't seen the sun-drenched top of Mount Dovinvere, the God-home, in so long you've nearly forgotten it. Now, you wander amongst the mortals in search of followers to restore you to full godhood."
+	self.textRiokol = "Once, you were Riokol of the Keys, the goddess that locked shut the gates of the Underworld as your fellow deities held demons at bay.\n\nBut in the millenia of peace that followed the demons being locked away, your role in the battle was forgotten as the gates would never be opened again. The fall from memory has reduced you from the pantheon of gods and you find yourself nearly depleted of power.\n\nYour abode atop Mount Dovinvere, the God-home, has become tangled with ivy, over-run by foliage in your long absence. Now you wander amonst the mortals in search of followers to restore you to full godhood."
+	self.playerSelection = nil
+
+	print("new game gui script init")
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("left-click") and action.pressed then
+		if gui.pick_node(gui.get_node("btnOstoriun"), action.x, action.y) then
+			gui.set_text(gui.get_node("txtStory"), self.textOstoriun)
+			self.playerSelection = "Ostoriun"
+			--gui.set_enabled(gui.get_node("txtLoading"), true)
+			--msg.post("game_controller:/controller", "load_game")
+		elseif gui.pick_node(gui.get_node("btnRiokol"), action.x, action.y) then
+			gui.set_text(gui.get_node("txtStory"), self.textRiokol)
+			self.playerSelection = "Riokol"
+		elseif gui.pick_node(gui.get_node("btnLoad"), action.x, action.y) then
+			if self.playerSelection == nil then
+				gui.set_text(gui.get_node("txtStory"), "You must select a player before starting the game!")
+			else
+				msg.post("GameManager:/GameManager#GameManager", "load_game", { playerName = self.playerSelection })
+			end
+		end
+	end
+end
